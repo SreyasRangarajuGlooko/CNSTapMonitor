@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CNSTapMonitor</string>
+    <string name="tap_info">Begin Tapping!</string>
+    <string name="tap_count">0</string>
+    <string name="time_left">Time Left: %.1f</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
+    <string name="save_message">Tap Count %d. Save this entry?</string>
 </resources>
