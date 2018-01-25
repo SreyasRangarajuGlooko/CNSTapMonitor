@@ -12,13 +12,13 @@ public class TapViewLogic {
     private TapFragment tapFragment;
     private int tapStarted = 0;
 
-    private CountDownTimer countDownTimer = new CountDownTimer(2000, 100) {
+    private CountDownTimer countDownTimer = new CountDownTimer(5100, 100) {
         @Override
         public void onTick(long millisUntilFinished) {
             if(tapStarted == ready){
                 tapStarted = running;
             }
-            tapFragment.timeIntervalUpdate(millisUntilFinished / 1000.0);
+            tapFragment.timeIntervalUpdate((millisUntilFinished - 100) / 1000.0);
         }
 
         @Override

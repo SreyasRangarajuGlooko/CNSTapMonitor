@@ -6,4 +6,6 @@
     <string name="save">Save</string>
     <string name="discard">Discard</string>
     <string name="save_message">Tap Count %d. Save this entry?</string>
+    <string name="timeStamp">Date/Time: %s</string>
+    <string name="numTaps">Tap Count: %d</string>
 </resources>

@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sreyas.cnstapmonitor.R;
+import com.sreyas.cnstapmonitor.TapData;
+import com.sreyas.cnstapmonitor.TapRecord;
 
 /**
  * Created by Sreyas on 1/24/2018.
@@ -50,8 +52,8 @@ public class TapFragment extends Fragment {
                 tapCount.setText(String.valueOf(tapViewLogic.getTapCount()));
             }
         });
+
         if(savedInstanceState != null && savedInstanceState.getInt("Dialog") == 1){
-            tapCount.setText(String.valueOf(tapViewLogic.getTapCount()));
             showSaveDialog();
         }
         return view;
@@ -79,6 +81,7 @@ public class TapFragment extends Fragment {
         builder.setCancelable(false);
         builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapViewLogic.getTapCount()), getActivity());
                 resetTap();
                 dialog.dismiss();
             }
