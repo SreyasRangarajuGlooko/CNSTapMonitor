@@ -8,4 +8,6 @@
     <string name="save_message">Tap Count %d. Save this entry?</string>
     <string name="timeStamp">Date/Time: %s</string>
     <string name="numTaps">Tap Count: %d</string>
+    <string name="XAxisLabel">Date and Time</string>
+    <string name="YAxisLabel">Tap Count</string>
 </resources>

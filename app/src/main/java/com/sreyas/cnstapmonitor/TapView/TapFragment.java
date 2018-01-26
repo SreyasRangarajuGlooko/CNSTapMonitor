@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sreyas.cnstapmonitor.MainActivity;
 import com.sreyas.cnstapmonitor.R;
 import com.sreyas.cnstapmonitor.TapData;
 import com.sreyas.cnstapmonitor.TapRecord;
@@ -82,6 +83,7 @@ public class TapFragment extends Fragment {
         builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapViewLogic.getTapCount()), getActivity());
+                ((MainActivity) getActivity()).redrawGraph();
                 resetTap();
                 dialog.dismiss();
             }

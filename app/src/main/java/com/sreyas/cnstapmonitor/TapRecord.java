@@ -11,8 +11,8 @@ import java.io.Serializable;
 
 public class TapRecord implements Serializable{
 
-    long timeStamp;
-    int numTaps;
+    private long timeStamp;
+    private int numTaps;
 
     public TapRecord(long timeStamp, int numTaps){
         this.timeStamp = timeStamp;
