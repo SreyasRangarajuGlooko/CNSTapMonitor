@@ -1,9 +1,8 @@
-package com.sreyas.cnstapmonitor;
+package com.sreyas.cnstapmonitor.ManageData;
 
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.sreyas.cnstapmonitor.MainActivity;
+import com.sreyas.cnstapmonitor.Models.TapData;
+import com.sreyas.cnstapmonitor.Models.TapRecord;
+import com.sreyas.cnstapmonitor.R;
+import com.sreyas.cnstapmonitor.Util;
 
 /**
  * Created by Sreyas on 1/25/2018.
@@ -57,6 +60,7 @@ public class ManageDataFragment extends Fragment {
                     public void onClick(View v) {
                         TapData.deleteTapRecord(getAdapterPosition(), context);
                         notifyDataSetChanged();
+                        ((MainActivity)getActivity()).redrawGraph();
                     }
                 });
             }
@@ -76,7 +80,7 @@ public class ManageDataFragment extends Fragment {
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
             TapRecord tapRecord = TapData.getTapData(context).get(position);
-            ((ViewHolderItem) viewHolder).date.setText(getResources().getString(R.string.timeStamp,Util.timeNumToString(tapRecord.getTimeStamp())));
+            ((ViewHolderItem) viewHolder).date.setText(String.valueOf(Util.timeNumToString(tapRecord.getTimeStamp())));
             ((ViewHolderItem) viewHolder).numTaps.setText(getResources().getString(R.string.numTaps,tapRecord.getNumTaps()));
         }
 

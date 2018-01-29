@@ -1,4 +1,6 @@
-package com.sreyas.cnstapmonitor;
+package com.sreyas.cnstapmonitor.Models;
+
+import com.sreyas.cnstapmonitor.Util;
 
 import org.json.JSONException;
 import org.json.JSONObject;

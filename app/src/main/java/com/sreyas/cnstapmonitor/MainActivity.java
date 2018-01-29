@@ -7,9 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
 
-import com.sreyas.cnstapmonitor.TapView.TapFragment;
+import com.sreyas.cnstapmonitor.Graph.GraphFragment;
+import com.sreyas.cnstapmonitor.ManageData.ManageDataFragment;
+import com.sreyas.cnstapmonitor.Tap.TapFragment;
 
 import java.util.HashMap;
 
@@ -25,13 +26,31 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         tabAdapter = new TabAdapter(getFragmentManager());
         viewPager.setAdapter(tabAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position != 0){
+                    TapFragment tapFragment = (TapFragment) tabAdapter.getFragment(0);
+                    if(tapFragment != null){
+                        tapFragment.resetTimer();
+                    }
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     public void redrawGraph(){
-        GraphFragment graphFragment = (GraphFragment) tabAdapter.getFragment(1);
-        if(graphFragment != null){
-            graphFragment.drawGraph();
-        }
+        tabAdapter.notifyDataSetChanged();
     }
 
     class TabAdapter extends FragmentPagerAdapter {
@@ -76,9 +95,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void destroyItem (ViewGroup container, int position, Object object) {
-            super.destroyItem(container, position, object);
-            fragments.remove(position);
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
         }
 
         public Fragment getFragment(Integer position){

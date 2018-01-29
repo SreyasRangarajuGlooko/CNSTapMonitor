@@ -1,4 +1,4 @@
-package com.sreyas.cnstapmonitor;
+package com.sreyas.cnstapmonitor.Graph;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +11,11 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.sreyas.cnstapmonitor.Models.TapData;
+import com.sreyas.cnstapmonitor.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by Sreyas on 1/26/2018.
@@ -18,6 +23,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class GraphFragment extends Fragment {
     GraphView graph;
+    LineGraphSeries<DataPoint> series;
+    View rootView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,30 +35,38 @@ public class GraphFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_graph, container, false);
-        graph = view.findViewById(R.id.graph);
+        rootView = inflater.inflate(R.layout.fragment_graph, container, false);
+        graph = rootView.findViewById(R.id.graph);
+        series = new LineGraphSeries<>(getGraphData());
         drawGraph();
-        return  view;
+        return  rootView;
     }
 
     public void drawGraph(){
         if(TapData.getTapData(getActivity()).size() > 0){
-            DataPoint[] points = new DataPoint[TapData.getTapData(getActivity()).size()];
-            for (int i = 0; i < points.length; i++) {
-                points[i] = new DataPoint(TapData.getTapData(getActivity()).get(i).getTimeStamp() * 60000L, TapData.getTapData(getActivity()).get(i).getNumTaps());
-            }
-            LineGraphSeries<DataPoint> series = new LineGraphSeries<>(points);
             series.setDrawDataPoints(true);
             graph.addSeries(series);
-            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
+            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), new SimpleDateFormat("MM/dd", Locale.getDefault())));
             graph.getGridLabelRenderer().setHumanRounding(false);
             graph.getViewport().setMinX(TapData.getTapData(getActivity()).get(0).getTimeStamp() * 60000L);
-            graph.getViewport().setMaxX(TapData.getTapData(getActivity()).get(TapData.getTapData(getActivity()).size() - 1).getTimeStamp() * 60000L + 100000);
+            graph.getViewport().setMaxX(TapData.getTapData(getActivity()).get(TapData.getTapData(getActivity()).size() - 1).getTimeStamp() * 60000L);
             graph.getViewport().setXAxisBoundsManual(true);
             graph.getViewport().setScalable(true);
             graph.getViewport().setScalableY(true);
-            graph.getGridLabelRenderer().setVerticalAxisTitle(getResources().getString(R.string.YAxisLabel));
-            graph.getGridLabelRenderer().setHorizontalAxisTitle(getResources().getString(R.string.XAxisLabel));
+            graph.setTitle(getResources().getString(R.string.GraphTitle));
+            graph.getGridLabelRenderer().setPadding(45);
         }
+    }
+
+    public void resetGraph(){
+        series.resetData(getGraphData());
+    }
+
+    public DataPoint[] getGraphData(){
+        DataPoint[] points = new DataPoint[TapData.getTapData(getActivity()).size()];
+        for (int i = 0; i < points.length; i++) {
+            points[i] = new DataPoint(TapData.getTapData(getActivity()).get(i).getTimeStamp() * 60000L, TapData.getTapData(getActivity()).get(i).getNumTaps());
+        }
+        return points;
     }
 }

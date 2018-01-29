@@ -1,25 +1,19 @@
-package com.sreyas.cnstapmonitor.TapView;
+package com.sreyas.cnstapmonitor.Tap;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sreyas.cnstapmonitor.MainActivity;
 import com.sreyas.cnstapmonitor.R;
-import com.sreyas.cnstapmonitor.TapData;
-import com.sreyas.cnstapmonitor.TapRecord;
+import com.sreyas.cnstapmonitor.Models.TapData;
+import com.sreyas.cnstapmonitor.Models.TapRecord;
 
 /**
  * Created by Sreyas on 1/24/2018.
@@ -90,6 +84,8 @@ public class TapFragment extends Fragment {
         });
         builder.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                TapData.setFakeData(getActivity());
+                ((MainActivity) getActivity()).redrawGraph();
                 resetTap();
                 dialog.cancel();
             }
@@ -101,6 +97,11 @@ public class TapFragment extends Fragment {
         tapInfo.setText(getResources().getString(R.string.tap_info));
         tapCount.setText(String.valueOf(tapViewLogic.getTapCount()));
         tapViewLogic.setReady();
+    }
+
+    public void resetTimer(){
+        tapViewLogic.resetTimer();
+        resetTap();
     }
 
     @Override

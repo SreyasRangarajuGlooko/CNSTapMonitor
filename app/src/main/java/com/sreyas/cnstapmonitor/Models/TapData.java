@@ -1,4 +1,4 @@
-package com.sreyas.cnstapmonitor;
+package com.sreyas.cnstapmonitor.Models;
 
 import android.content.Context;
 
@@ -27,8 +27,10 @@ public final class TapData {
             catch (Exception e){
                 e.printStackTrace();
             }
-            if(tapData == null){
-                tapData = new ArrayList<>();
+            finally {
+                if(tapData == null){
+                    tapData = new ArrayList<>();
+                }
             }
         }
         return tapData;
@@ -72,5 +74,19 @@ public final class TapData {
             stringBuilder.append(tapRecord.toString()).append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public static void setFakeData(Context context){
+        tapData = new ArrayList<>();
+        for(int i = 2; i < 15; i++){
+            tapData.add(new TapRecord(System.currentTimeMillis() / 60000 - (720 * i),(int )(Math.random() * 50 + 1)));
+        }
+        Collections.sort(tapData, new Comparator<TapRecord>() {
+            @Override
+            public int compare(TapRecord o1, TapRecord o2) {
+                return (int) (o1.getTimeStamp() - o2.getTimeStamp());
+            }
+        });
+        saveTapData(context);
     }
 }
