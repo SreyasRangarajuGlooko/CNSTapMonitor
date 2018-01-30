@@ -51,15 +51,12 @@ public class GraphFragment extends Fragment {
             graph.getViewport().setMinX(TapData.getTapData(getActivity()).get(0).getTimeStamp() * 60000L);
             graph.getViewport().setMaxX(TapData.getTapData(getActivity()).get(TapData.getTapData(getActivity()).size() - 1).getTimeStamp() * 60000L);
             graph.getViewport().setXAxisBoundsManual(true);
-            graph.getViewport().setScalable(true);
-            graph.getViewport().setScalableY(true);
+            graph.getViewport().setMinY(0);
+            graph.getViewport().setMaxY(TapData.getMax(getActivity()) + 5);
+            graph.getViewport().setYAxisBoundsManual(true);
             graph.setTitle(getResources().getString(R.string.GraphTitle));
-            graph.getGridLabelRenderer().setPadding(45);
+            graph.getGridLabelRenderer().setPadding(32);
         }
-    }
-
-    public void resetGraph(){
-        series.resetData(getGraphData());
     }
 
     public DataPoint[] getGraphData(){

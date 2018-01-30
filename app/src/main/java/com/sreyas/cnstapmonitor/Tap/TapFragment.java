@@ -84,7 +84,7 @@ public class TapFragment extends Fragment {
         });
         builder.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                TapData.setFakeData(getActivity());
+//                TapData.setFakeData(getActivity());
                 ((MainActivity) getActivity()).redrawGraph();
                 resetTap();
                 dialog.cancel();

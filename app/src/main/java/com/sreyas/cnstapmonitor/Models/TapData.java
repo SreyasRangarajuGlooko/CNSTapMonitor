@@ -67,6 +67,14 @@ public final class TapData {
         }
     }
 
+    public static int getMax(Context context){
+        int maxTapCount = 0;
+        for(TapRecord tapRecord: getTapData(context)){
+            maxTapCount = Math.max(maxTapCount, tapRecord.getNumTaps());
+        }
+        return maxTapCount;
+    }
+
     public static String printString(Context context) {
         getTapData(context);
         StringBuilder stringBuilder = new StringBuilder();
@@ -79,7 +87,7 @@ public final class TapData {
     public static void setFakeData(Context context){
         tapData = new ArrayList<>();
         for(int i = 2; i < 15; i++){
-            tapData.add(new TapRecord(System.currentTimeMillis() / 60000 - (720 * i),(int )(Math.random() * 50 + 1)));
+            tapData.add(new TapRecord(System.currentTimeMillis() / 60000 - (720 * i),(int )(Math.random() * 10 + 30)));
         }
         Collections.sort(tapData, new Comparator<TapRecord>() {
             @Override
