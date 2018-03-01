@@ -30,7 +30,7 @@ public class TapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(savedInstanceState == null) {
+        if(tapViewLogic == null) {
             tapViewLogic = new TapViewLogic(this);
         }
     }
@@ -55,12 +55,16 @@ public class TapFragment extends Fragment {
     }
 
     public void timeIntervalUpdate(double timeLeft){
-        tapInfo.setText(getResources().getString(R.string.time_left, timeLeft));
+        if(getActivity() != null){
+            tapInfo.setText(getString(R.string.time_left, timeLeft));
+        }
     }
 
     public void timeFinished(){
-        tapInfo.setText(getResources().getString(R.string.tap_info));
-        showSaveDialog();
+        if(getActivity() != null){
+            tapInfo.setText(getString(R.string.tap_info));
+            showSaveDialog();
+        }
     }
 
     public void showSaveDialog(){
