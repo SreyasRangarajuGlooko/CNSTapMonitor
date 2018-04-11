@@ -3,6 +3,7 @@ package com.sreyas.cnstapmonitor.Graph;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,18 @@ import com.sreyas.cnstapmonitor.R;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by Sreyas on 1/26/2018.
  */
 
 public class GraphFragment extends Fragment {
-    GraphView graph;
+    @BindView(R.id.graph) GraphView graph;
     LineGraphSeries<DataPoint> series;
-    View rootView;
+    Unbinder unbinder;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,11 +40,16 @@ public class GraphFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_graph, container, false);
-        graph = rootView.findViewById(R.id.graph);
+        View view = inflater.inflate(R.layout.fragment_graph, container, false);
+        unbinder = ButterKnife.bind(this, view);
         series = new LineGraphSeries<>(getGraphData());
         drawGraph();
-        return  rootView;
+        return  view;
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     public void drawGraph(){

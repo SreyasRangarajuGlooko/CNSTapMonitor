@@ -3,6 +3,7 @@ package com.sreyas.cnstapmonitor;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,21 +11,25 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.sreyas.cnstapmonitor.Graph.GraphFragment;
 import com.sreyas.cnstapmonitor.ManageData.ManageDataFragment;
+import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.Tap.TapFragment;
 
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity {
-    ViewPager viewPager;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class MainActivity extends AppCompatActivity implements TapDataListener {
+    @BindView(R.id.viewPager) ViewPager viewPager;
     TabAdapter tabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        viewPager = findViewById(R.id.viewPager);
+        ButterKnife.bind(this);
         tabAdapter = new TabAdapter(getFragmentManager());
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(tabAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -37,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
                 if(position != 0){
                     TapFragment tapFragment = (TapFragment) tabAdapter.getFragment(0);
                     if(tapFragment != null){
-                        tapFragment.resetTimer();
+                        tapFragment.resetTap();
                     }
                 }
             }
@@ -49,7 +54,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void redrawGraph(){
+    @Override
+    public void onTapDataChanged() {
         tabAdapter.notifyDataSetChanged();
     }
 
@@ -95,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public int getItemPosition(Object object) {
+        public int getItemPosition(@NonNull Object object) {
             return POSITION_NONE;
         }
 
