@@ -25,9 +25,9 @@ import butterknife.Unbinder;
  * Created by Sreyas on 1/24/2018.
  */
 
-public class TapFragment extends Fragment implements TapViewLogic.TapListener{
+public class TapFragment extends Fragment implements TapViewModel.TapListener{
 
-    TapViewLogic tapViewLogic;
+    TapViewModel tapViewModel;
     @BindView(R.id.tap_info) TextView tapInfo;
     @BindView(R.id.tap_count) TextView tapCountView;
     Unbinder unbinder;
@@ -50,9 +50,9 @@ public class TapFragment extends Fragment implements TapViewLogic.TapListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(tapViewLogic == null) {
-            tapViewLogic = new TapViewLogic();
-            tapViewLogic.addTapListener(this);
+        if(tapViewModel == null) {
+            tapViewModel = new TapViewModel();
+            tapViewModel.addTapListener(this);
         }
     }
 
@@ -73,7 +73,7 @@ public class TapFragment extends Fragment implements TapViewLogic.TapListener{
 
     @OnClick(R.id.tap_count)
     void onClick(){
-        tapViewLogic.tap();
+        tapViewModel.tap();
     }
 
     private void showSaveDialog(){
@@ -85,11 +85,11 @@ public class TapFragment extends Fragment implements TapViewLogic.TapListener{
 
     private void createSaveDialog(){
         builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-        builder.setMessage(getResources().getString(R.string.save_message, tapViewLogic.getTapCount()));
+        builder.setMessage(getResources().getString(R.string.save_message, tapViewModel.getTapCount()));
         builder.setCancelable(false);
         builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapViewLogic.getTapCount()), getActivity());
+                tapViewModel.addTapRecord(getActivity());
                 tapDataListener.onTapDataChanged();
                 resetTap();
                 dialog.dismiss();
@@ -106,7 +106,7 @@ public class TapFragment extends Fragment implements TapViewLogic.TapListener{
     }
 
     public void resetTap(){
-        tapViewLogic.reset();
+        tapViewModel.reset();
     }
 
     @Override

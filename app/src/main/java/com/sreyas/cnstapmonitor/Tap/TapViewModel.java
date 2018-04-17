@@ -1,7 +1,11 @@
 package com.sreyas.cnstapmonitor.Tap;
 
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.util.Log;
+
+import com.sreyas.cnstapmonitor.Models.TapData;
+import com.sreyas.cnstapmonitor.Models.TapRecord;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +14,8 @@ import java.util.Set;
  * Created by Sreyas on 1/24/2018.
  */
 
-public class TapViewLogic {
+public class TapViewModel {
+    private boolean ready = true;
     private int tapCount = 0;
     private double timeLeft = -1;
     private Set<TapListener> tapListeners = new HashSet<>();
@@ -24,10 +29,11 @@ public class TapViewLogic {
         @Override
         public void onFinish() {
             finished();
+            ready = false;
         }
     };
 
-    TapViewLogic(){}
+    TapViewModel(){}
 
     int getTapCount() {
         return tapCount;
@@ -35,7 +41,10 @@ public class TapViewLogic {
 
     void tap(){
         if(timeLeft < 0){
-            countDownTimer.start();
+            if(ready){
+                countDownTimer.start();
+                ready = false;
+            }
         }
         else {
             setTapCount(tapCount + 1);
@@ -46,11 +55,11 @@ public class TapViewLogic {
         setTapCount(0);
         setTimeLeft(-1);
         countDownTimer.cancel();
+        ready = true;
     }
 
     void addTapListener(TapListener tapListener){
         tapListeners.add(tapListener);
-        Log.v("test", ""+tapListeners.size());
     }
 
     void removeTapListener(TapListener tapListener){
@@ -76,6 +85,10 @@ public class TapViewLogic {
         for (TapListener tapListener: tapListeners) {
             tapListener.onFinished();
         }
+    }
+
+    public void addTapRecord(Context context){
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, getTapCount()), context);
     }
 
     public interface TapListener{
