@@ -33,13 +33,13 @@ public class TapViewModel {
         }
     };
 
-    TapViewModel(){}
+    public TapViewModel(){}
 
     int getTapCount() {
         return tapCount;
     }
 
-    void tap(){
+    public void tap(){
         if(timeLeft < 0){
             if(ready){
                 countDownTimer.start();
@@ -51,18 +51,18 @@ public class TapViewModel {
         }
     }
 
-    void reset(){
+    public void reset(){
         setTapCount(0);
         setTimeLeft(-1);
         countDownTimer.cancel();
         ready = true;
     }
 
-    void addTapListener(TapListener tapListener){
+    public void addTapListener(TapListener tapListener){
         tapListeners.add(tapListener);
     }
 
-    void removeTapListener(TapListener tapListener){
+    public void removeTapListener(TapListener tapListener){
         tapListeners.remove(tapListener);
     }
 
@@ -88,7 +88,7 @@ public class TapViewModel {
     }
 
     public void addTapRecord(Context context){
-        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, getTapCount()), context);
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapCount), context);
     }
 
     public interface TapListener{
