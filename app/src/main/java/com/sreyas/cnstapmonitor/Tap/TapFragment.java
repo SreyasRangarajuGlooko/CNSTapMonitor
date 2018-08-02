@@ -11,8 +11,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.sreyas.cnstapmonitor.Models.TapData;
-import com.sreyas.cnstapmonitor.Models.TapRecord;
+import com.sreyas.cnstapmonitor.Feedback.FeedbackHandler;
 import com.sreyas.cnstapmonitor.R;
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
 
@@ -34,6 +33,7 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
     AlertDialog.Builder builder;
     AlertDialog saveDialog;
     TapDataListener tapDataListener;
+    FeedbackHandler feedbackHandler;
 
 
     @Override
@@ -54,6 +54,7 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
             tapViewModel = new TapViewModel();
             tapViewModel.addTapListener(this);
         }
+        feedbackHandler = new FeedbackHandler(getActivity());
     }
 
     @Override
@@ -92,6 +93,7 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
                 tapViewModel.addTapRecord(getActivity());
                 tapDataListener.onTapDataChanged();
                 resetTap();
+                feedbackHandler.launchFeedbackConditionally();
                 dialog.dismiss();
             }
         });
