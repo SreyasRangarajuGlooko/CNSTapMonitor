@@ -1,4 +1,4 @@
-package com.sreyas.cnstapmonitor.Feedback;
+package com.sreyas.cnstapmonitor.Models;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,16 +9,17 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.Window;
 
-import com.sreyas.cnstapmonitor.Models.TapData;
 import com.sreyas.cnstapmonitor.R;
 
 import java.util.concurrent.Callable;
 
 public class FeedbackHandler {
     private Activity activity;
+    private SharedPreferences sharedPreferences;
 
     public FeedbackHandler(Activity activity){
         this.activity = activity;
+        sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
     }
 
     public void launchFeedbackConditionally(){
@@ -27,19 +28,16 @@ public class FeedbackHandler {
         }
     }
 
-    private boolean askFeedbackCheck(){
-        boolean giveFeedback;
-        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-        if(sharedPreferences.getInt(activity.getString(R.string.feedback_check), 0) < 2){
-            giveFeedback = TapData.getTapData(activity).size() % 10 == 0;
-        }
-        else{
-            giveFeedback = TapData.getTapData(activity).size() % 90 == 0;
-        }
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(activity.getString(R.string.feedback_check), sharedPreferences.getInt(activity.getString(R.string.feedback_check), 0) + 1);
+    public boolean askFeedbackCheck(){
+        return sharedPreferences.getInt(activity.getString(R.string.user_rated_app), 0) == 0 &&
+                (sharedPreferences.getInt(activity.getString(R.string.save_count), 0) == 10 ||
+                 sharedPreferences.getInt(activity.getString(R.string.save_count), 0) % 90 == 0);
+    }
+
+    private void setUserRatedApp(){
+        SharedPreferences.Editor editor = activity.getPreferences(Context.MODE_PRIVATE).edit();
+        editor.putInt(activity.getString(R.string.user_rated_app), 1);
         editor.apply();
-        return giveFeedback;
     }
 
     private void appEnjoymentFeedback(){
@@ -63,6 +61,7 @@ public class FeedbackHandler {
             @Override
             public Void call() throws Exception {
                 activity.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(activity.getString(R.string.rate_link))));
+                setUserRatedApp();
                 return null;
             }
         }, new Callable<Void>() {

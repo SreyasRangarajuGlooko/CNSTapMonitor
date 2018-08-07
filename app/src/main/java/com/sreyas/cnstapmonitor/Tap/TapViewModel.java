@@ -1,5 +1,6 @@
 package com.sreyas.cnstapmonitor.Tap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -87,7 +88,7 @@ public class TapViewModel {
         }
     }
 
-    public void addTapRecord(Context context){
+    public void addTapRecord(Activity context){
         TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapCount), context);
     }
 

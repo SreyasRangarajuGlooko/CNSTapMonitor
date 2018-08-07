@@ -1,6 +1,10 @@
 package com.sreyas.cnstapmonitor.Models;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import com.sreyas.cnstapmonitor.R;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -36,7 +40,7 @@ public final class TapData {
         return tapData;
     }
 
-    public static void addTapRecord(TapRecord tapRecord, Context context) {
+    public static void addTapRecord(TapRecord tapRecord, Activity context) {
         getTapData(context);
         tapData.add(tapRecord);
         Collections.sort(tapData, new Comparator<TapRecord>() {
@@ -46,6 +50,7 @@ public final class TapData {
             }
         });
         saveTapData(context);
+        incrementSaveCount(context);
     }
 
     public static void deleteTapRecord(int position, Context context){
@@ -54,7 +59,7 @@ public final class TapData {
         saveTapData(context);
     }
 
-    private static void saveTapData(Context context){
+    public static void saveTapData(Context context){
         try{
             FileOutputStream fileOutputStream = context.openFileOutput("TapData", Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -73,6 +78,13 @@ public final class TapData {
             maxTapCount = Math.max(maxTapCount, tapRecord.getNumTaps());
         }
         return maxTapCount;
+    }
+
+    private static void incrementSaveCount(Activity context){
+        SharedPreferences sharedPreferences = context.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.save_count), sharedPreferences.getInt(context.getString(R.string.save_count), 0) + 1);
+        editor.apply();
     }
 
     public static String printString(Context context) {

@@ -19,7 +19,7 @@ public class TapViewModelTest {
     private double timeLeftTest;
 
     @Before
-    public  void setUp(){
+    public void setUp(){
         getInstrumentation().runOnMainSync(new Runnable() {
             @Override
             public void run() {
@@ -46,41 +46,32 @@ public class TapViewModelTest {
 
     @Test
     public void getTapCount(){
-        taps(3);
+        tap(3);
         assertEquals(2, tapCountTest);
     }
 
     @Test
     public void reset(){
-        taps(5);
+        tap(5);
         tapViewModel.reset();
         assertEquals(0, tapCountTest);
         assertEquals(-1, timeLeftTest, .0001);
-        taps(3);
+        tap(3);
         assertEquals(2, tapCountTest);
         assertEquals(4.7, timeLeftTest, .1);
     }
 
     @Test
     public void finished(){
-        taps(5);
-        sleep(6000);
+        tap(5);
+        TestUtil.sleep(6000);
         assertEquals(-1, timeLeftTest, .0001);
     }
 
-    private void taps(int count){
+    private void tap(int count){
         for(int i = 0;i < count;i++){
             tapViewModel.tap();
-            sleep(100);
-        }
-    }
-
-    private void sleep(long millis){
-        try{
-            Thread.sleep(millis);
-        }
-        catch (Exception e){
-            e.printStackTrace();
+            TestUtil.sleep(100);
         }
     }
 }

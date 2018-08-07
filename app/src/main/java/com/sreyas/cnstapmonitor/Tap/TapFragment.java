@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.sreyas.cnstapmonitor.Feedback.FeedbackHandler;
-import com.sreyas.cnstapmonitor.R;
+import com.sreyas.cnstapmonitor.Models.FeedbackHandler;
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
+import com.sreyas.cnstapmonitor.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

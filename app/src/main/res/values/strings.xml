@@ -17,5 +17,6 @@
     <string name="numTaps">Tap Count: %d</string>
     <string name="GraphTitle">Tap Counts</string>
     <string name="rate_link">market://details?id=com.sreyas.cnstapmonitor</string>
-    <string name="feedback_check">feedback</string>
+    <string name="user_rated_app">rated</string>
+    <string name="save_count">saveCount</string>
 </resources>
