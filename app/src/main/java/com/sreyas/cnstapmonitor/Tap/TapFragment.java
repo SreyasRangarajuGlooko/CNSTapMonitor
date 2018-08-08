@@ -90,19 +90,19 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
         builder.setCancelable(false);
         builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
                 tapViewModel.addTapRecord(getActivity());
                 tapDataListener.onTapDataChanged();
                 resetTap();
                 feedbackHandler.launchFeedbackConditionally();
-                dialog.dismiss();
+
             }
         });
         builder.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-//                TapData.setFakeData(getActivity());
-                tapDataListener.onTapDataChanged();
-                resetTap();
                 dialog.cancel();
+                resetTap();
+//                TapData.setFakeData(getActivity());
             }
         });
     }
