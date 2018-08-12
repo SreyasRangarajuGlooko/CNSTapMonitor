@@ -93,7 +93,7 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
                 tapViewModel.addTapRecord(getActivity());
                 tapDataListener.onTapDataChanged();
                 resetTap();
-                feedbackHandler.launchFeedbackConditionally();
+//                feedbackHandler.launchFeedbackConditionally();
                 dialog.dismiss();
             }
         });
