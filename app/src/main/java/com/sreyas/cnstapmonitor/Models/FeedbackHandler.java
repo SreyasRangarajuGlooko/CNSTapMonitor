@@ -50,12 +50,19 @@ public class FeedbackHandler {
         editor.apply();
     }
 
+    public int getSaveCount(Activity activity){
+        return activity.getPreferences(Context.MODE_PRIVATE).getInt(activity.getString(R.string.save_count), 0);
+    }
+
+    public int getUserRatedApp(Activity activity){
+        return activity.getPreferences(Context.MODE_PRIVATE).getInt(activity.getString(R.string.user_rated_app), 0);
+    }
+
     private boolean askFeedbackCheck(Activity activity) {
-        return true;
-//        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-//        return sharedPreferences.getInt(activity.getString(R.string.user_rated_app), 0) == 0 &&
-//                (sharedPreferences.getInt(activity.getString(R.string.save_count), 0) == 10 ||
-//                        sharedPreferences.getInt(activity.getString(R.string.save_count), 0) % 90 == 0);
+        SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(activity.getString(R.string.user_rated_app), 0) == 0 &&
+                (sharedPreferences.getInt(activity.getString(R.string.save_count), 0) == 10 ||
+                        sharedPreferences.getInt(activity.getString(R.string.save_count), 0) % 90 == 0);
     }
 
     private void setUserRatedApp(Activity activity) {

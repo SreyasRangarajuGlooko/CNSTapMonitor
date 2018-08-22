@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.CountDownTimer;
 
+import com.sreyas.cnstapmonitor.Models.Analytics;
 import com.sreyas.cnstapmonitor.Models.FeedbackHandler;
 import com.sreyas.cnstapmonitor.Models.TapData;
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
@@ -87,7 +88,7 @@ public class TapViewModel {
     }
 
     public void respondToDialog(String message, int response, Activity activity) {
-//        Analytics.logFeedbackEvent(message, activity.getString(R.string.yes));
+        Analytics.logFeedbackEvent(message, ((response == 1) ? activity.getString(R.string.yes) : activity.getString(R.string.no)));
         if (message.equals(activity.getString(R.string.save_message, tapCount)) && response == 1) {
             newTapRecord(activity);
         }
@@ -113,7 +114,7 @@ public class TapViewModel {
         TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, tapCount), activity);
         feedbackHandler.incrementSaveCount(activity);
         tapDataListener.onTapDataChanged();
-//        Analytics.logSaveEvent(feedbackHandler.getSaveCount(activity), tapCount, feedbackHandler.getUserRatedApp(activity));
+        Analytics.logSaveEvent(feedbackHandler.getSaveCount(activity), tapCount, feedbackHandler.getUserRatedApp(activity));
     }
 
     private void setTimeLeft(double val) {

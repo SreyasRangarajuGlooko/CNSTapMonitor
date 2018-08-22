@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.sreyas.cnstapmonitor.Graph.GraphFragment;
 import com.sreyas.cnstapmonitor.ManageData.ManageDataFragment;
+import com.sreyas.cnstapmonitor.Models.Analytics;
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.Tap.TapFragment;
 
@@ -18,8 +19,6 @@ import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-//import com.google.firebase.analytics.FirebaseAnalytics;
 
 public class MainActivity extends AppCompatActivity implements TapDataListener {
     @BindView(R.id.viewPager)
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements TapDataListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        Analytics.initialize(this);
+        Analytics.initialize(this);
         tabAdapter = new TabAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(tabAdapter);
