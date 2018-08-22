@@ -14,14 +14,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.sreyas.cnstapmonitor.Models.TapData;
+import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.Models.TapRecord;
 import com.sreyas.cnstapmonitor.R;
-import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -30,10 +29,11 @@ import butterknife.Unbinder;
 
 public class ManageDataFragment extends Fragment {
 
-    @BindView(R.id.recycler_view) RecyclerView recyclerView;
-    RecyclerViewAdapter recyclerViewAdapter;
-    TapDataListener tapDataListener;
-    Unbinder unbinder;
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
+    private TapDataListener tapDataListener;
+    private Unbinder unbinder;
 
     @Override
     public void onAttach(Activity activity) {
@@ -62,7 +62,8 @@ public class ManageDataFragment extends Fragment {
         return view;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
@@ -71,9 +72,12 @@ public class ManageDataFragment extends Fragment {
         Context context;
 
         class ViewHolderItem extends RecyclerView.ViewHolder {
-            @BindView(R.id.date) TextView date;
-            @BindView(R.id.num_taps) TextView numTaps;
-            @BindView(R.id.delete_item) ImageButton deleteItem;
+            @BindView(R.id.date)
+            TextView date;
+            @BindView(R.id.num_taps)
+            TextView numTaps;
+            @BindView(R.id.delete_item)
+            ImageButton deleteItem;
 
             ViewHolderItem(View view) {
                 super(view);
@@ -105,7 +109,7 @@ public class ManageDataFragment extends Fragment {
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, final int position) {
             TapRecord tapRecord = TapData.getTapData(context).get(position);
             ((ViewHolderItem) viewHolder).date.setText(String.valueOf(Util.timeNumToString(tapRecord.getTimeStamp())));
-            ((ViewHolderItem) viewHolder).numTaps.setText(getResources().getString(R.string.numTaps,tapRecord.getNumTaps()));
+            ((ViewHolderItem) viewHolder).numTaps.setText(getResources().getString(R.string.numTaps, tapRecord.getNumTaps()));
         }
 
         @Override

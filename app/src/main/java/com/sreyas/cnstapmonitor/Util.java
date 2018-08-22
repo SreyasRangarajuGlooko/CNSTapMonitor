@@ -10,9 +10,9 @@ import java.util.Locale;
  */
 
 public final class Util {
-    public static String timeNumToString(long timeStamp){
+    public static String timeNumToString(long timeStamp) {
         Date date = new Date(timeStamp * 60000L);
         DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm a", Locale.US);
-        return  dateFormat.format(date);
+        return dateFormat.format(date);
     }
 }

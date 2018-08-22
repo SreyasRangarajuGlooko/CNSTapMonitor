@@ -19,15 +19,19 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//import com.google.firebase.analytics.FirebaseAnalytics;
+
 public class MainActivity extends AppCompatActivity implements TapDataListener {
-    @BindView(R.id.viewPager) ViewPager viewPager;
-    TabAdapter tabAdapter;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
+    private TabAdapter tabAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+//        Analytics.initialize(this);
         tabAdapter = new TabAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(tabAdapter);
@@ -39,9 +43,9 @@ public class MainActivity extends AppCompatActivity implements TapDataListener {
 
             @Override
             public void onPageSelected(int position) {
-                if(position != 0){
+                if (position != 0) {
                     TapFragment tapFragment = (TapFragment) tabAdapter.getFragment(0);
-                    if(tapFragment != null){
+                    if (tapFragment != null) {
                         tapFragment.resetTap();
                     }
                 }
@@ -60,20 +64,20 @@ public class MainActivity extends AppCompatActivity implements TapDataListener {
     }
 
     class TabAdapter extends FragmentPagerAdapter {
-        private String tabTitles[] = new String[] { "Tap", "Graph", "Data" };
-        private HashMap<Integer,Fragment> fragments = new HashMap<>();
+        private String tabTitles[] = new String[]{"Tap", "Graph", "Data"};
+        private HashMap<Integer, Fragment> fragments = new HashMap<>();
 
-        TabAdapter(FragmentManager fragmentManager){
+        TabAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
         }
 
         @Override
-        public int getCount(){
+        public int getCount() {
             return 3;
         }
 
         @Override
-        public Fragment getItem(int position){
+        public Fragment getItem(int position) {
             Fragment fragment;
             switch (position) {
                 case 0:
@@ -102,10 +106,13 @@ public class MainActivity extends AppCompatActivity implements TapDataListener {
 
         @Override
         public int getItemPosition(@NonNull Object object) {
+            if(object instanceof TapFragment){
+                return POSITION_UNCHANGED;
+            }
             return POSITION_NONE;
         }
 
-        public Fragment getFragment(Integer position){
+        public Fragment getFragment(Integer position) {
             return fragments.get(position);
         }
     }

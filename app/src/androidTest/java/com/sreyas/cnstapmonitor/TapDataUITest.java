@@ -7,6 +7,7 @@ import android.support.test.espresso.ViewAction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.sreyas.cnstapmonitor.Models.TapData;
@@ -40,19 +41,41 @@ public class TapDataUITest {
     }
 
     @Test
+    public void getMax(){
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 1), activityTestRule.getActivity());
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 30), activityTestRule.getActivity());
+        assertEquals(30, TapData.getMax(activityTestRule.getActivity()));
+    }
+
+    @Test
     public void addTapRecord(){
-        for(int i = 0;i < 3;i++){
-            TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
-        }
-        TestUtil.performTapTest(6);
-        onView(withText("DATA")).perform(click());
-        checkItemCount(4);
-        ArrayList<TapRecord> tapRecords = TapData.getTapData(activityTestRule.getActivity());
-        assertEquals(5, tapRecords.get(tapRecords.size() - 1).getNumTaps());
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
+        assertEquals(1, TapData.getTapData(activityTestRule.getActivity()).size());
     }
 
     @Test
     public void deleteTapRecord(){
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
+        TapData.deleteTapRecord(0, activityTestRule.getActivity());
+        assertEquals(0, TapData.getTapData(activityTestRule.getActivity()).size());
+    }
+
+    @Test
+    public void addTapRecordUI(){
+        for(int i = 0;i < 3;i++){
+            TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
+        }
+        TestUtil.performTapTest(5);
+        Log.v("test", "savecount: "+activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE).getInt(activityTestRule.getActivity().getString(R.string.save_count), 0));
+        onView(withText("DATA")).perform(click());
+        checkItemCount(4);
+        ArrayList<TapRecord> tapRecords = TapData.getTapData(activityTestRule.getActivity());
+        assertEquals(4, tapRecords.get(tapRecords.size() - 1).getNumTaps());
+    }
+
+    @Test
+    public void deleteTapRecordUI(){
         for(int i = 0;i < 3;i++){
             TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
         }
@@ -79,16 +102,10 @@ public class TapDataUITest {
         assertEquals(2, tapRecords.get(tapRecords.size() - 1).getNumTaps());
     }
 
-    @Test
-    public void incrementSaveCount(){
-        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 10), activityTestRule.getActivity());
-        assertEquals(1, activityTestRule.getActivity().getPreferences(Context.MODE_PRIVATE)
-                .getInt(activityTestRule.getActivity().getString(R.string.save_count), 0));
-    }
-
     private void clearTapData(){
         TapData.getTapData(activityTestRule.getActivity()).clear();
-        TapData.saveTapData(activityTestRule.getActivity());
+        TapData.addTapRecord(new TapRecord(System.currentTimeMillis() / 60000, 1), activityTestRule.getActivity());
+        TapData.deleteTapRecord(0, activityTestRule.getActivity());
     }
 
     private void zeroSaveCount(){

@@ -2,9 +2,6 @@ package com.sreyas.cnstapmonitor.Models;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-
-import com.sreyas.cnstapmonitor.R;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,17 +19,15 @@ public final class TapData {
     private static ArrayList<TapRecord> tapData;
 
     public static ArrayList<TapRecord> getTapData(Context context) {
-        if(tapData == null){
-            try{
+        if (tapData == null) {
+            try {
                 FileInputStream fileInputStream = context.openFileInput("TapData");
                 ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
                 tapData = (ArrayList<TapRecord>) objectInputStream.readObject();
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
-            }
-            finally {
-                if(tapData == null){
+            } finally {
+                if (tapData == null) {
                     tapData = new ArrayList<>();
                 }
             }
@@ -50,56 +45,48 @@ public final class TapData {
             }
         });
         saveTapData(context);
-        incrementSaveCount(context);
     }
 
-    public static void deleteTapRecord(int position, Context context){
+    public static void deleteTapRecord(int position, Context context) {
         getTapData(context);
         tapData.remove(position);
         saveTapData(context);
     }
 
-    public static void saveTapData(Context context){
-        try{
-            FileOutputStream fileOutputStream = context.openFileOutput("TapData", Context.MODE_PRIVATE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(tapData);
-            objectOutputStream.close();
-            fileOutputStream.close();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public static int getMax(Context context){
+    public static int getMax(Context context) {
         int maxTapCount = 0;
-        for(TapRecord tapRecord: getTapData(context)){
+        for (TapRecord tapRecord : getTapData(context)) {
             maxTapCount = Math.max(maxTapCount, tapRecord.getNumTaps());
         }
         return maxTapCount;
     }
 
-    private static void incrementSaveCount(Activity context){
-        SharedPreferences sharedPreferences = context.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(context.getString(R.string.save_count), sharedPreferences.getInt(context.getString(R.string.save_count), 0) + 1);
-        editor.apply();
+    private static void saveTapData(Context context) {
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput("TapData", Context.MODE_PRIVATE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(tapData);
+            objectOutputStream.close();
+            fileOutputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     public static String printString(Context context) {
         getTapData(context);
         StringBuilder stringBuilder = new StringBuilder();
-        for(TapRecord tapRecord:tapData){
+        for (TapRecord tapRecord : tapData) {
             stringBuilder.append(tapRecord.toString()).append("\n");
         }
         return stringBuilder.toString();
     }
 
-    public static void setFakeData(Context context){
+    public static void setFakeData(Context context) {
         tapData = new ArrayList<>();
-        for(int i = 2; i < 15; i++){
-            tapData.add(new TapRecord(System.currentTimeMillis() / 60000 - (720 * i),(int )(Math.random() * 10 + 30)));
+        for (int i = 2; i < 15; i++) {
+            tapData.add(new TapRecord(System.currentTimeMillis() / 60000 - (720 * i), (int) (Math.random() * 10 + 30)));
         }
         Collections.sort(tapData, new Comparator<TapRecord>() {
             @Override

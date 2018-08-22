@@ -11,12 +11,12 @@ import java.io.Serializable;
  * Created by Sreyas on 1/25/2018.
  */
 
-public class TapRecord implements Serializable{
+public class TapRecord implements Serializable {
 
     private long timeStamp;
     private int numTaps;
 
-    public TapRecord(long timeStamp, int numTaps){
+    public TapRecord(long timeStamp, int numTaps) {
         this.timeStamp = timeStamp;
         this.numTaps = numTaps;
     }
@@ -37,8 +37,8 @@ public class TapRecord implements Serializable{
         this.numTaps = numTaps;
     }
 
-    public String toJSON(){
-        JSONObject jsonObject= new JSONObject();
+    public String toJSON() {
+        JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("timeStamp", getTimeStamp());
             jsonObject.put("numTaps", getNumTaps());

@@ -4,14 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.sreyas.cnstapmonitor.Models.FeedbackHandler;
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.R;
 
@@ -24,17 +25,16 @@ import butterknife.Unbinder;
  * Created by Sreyas on 1/24/2018.
  */
 
-public class TapFragment extends Fragment implements TapViewModel.TapListener{
+public class TapFragment extends Fragment implements TapViewModel.TapListener {
 
-    TapViewModel tapViewModel;
-    @BindView(R.id.tap_info) TextView tapInfo;
-    @BindView(R.id.tap_count) TextView tapCountView;
-    Unbinder unbinder;
-    AlertDialog.Builder builder;
-    AlertDialog saveDialog;
-    TapDataListener tapDataListener;
-    FeedbackHandler feedbackHandler;
-
+    @BindView(R.id.tap_info)
+    TextView tapInfo;
+    @BindView(R.id.tap_count)
+    TextView tapCountView;
+    private Unbinder unbinder;
+    private TapViewModel tapViewModel;
+    private TapDataListener tapDataListener;
+    private AlertDialog alertDialog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -50,73 +50,72 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if(tapViewModel == null) {
+        if (tapViewModel == null) {
             tapViewModel = new TapViewModel();
             tapViewModel.addTapListener(this);
         }
-        feedbackHandler = new FeedbackHandler(getActivity());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tap_view, container, false);
         unbinder = ButterKnife.bind(this, view);
-        if(savedInstanceState != null && savedInstanceState.getInt("Dialog") == 1){
-            showSaveDialog();
+        tapViewModel.setTapDataListener(tapDataListener);
+        if (savedInstanceState != null && savedInstanceState.getInt("Dialog", 0) == 1) {
+            alertDialog.show();
         }
         return view;
     }
 
-    @Override public void onDestroyView() {
+    @Override
+    public void onPause(){
+        super.onPause();
+        if(alertDialog == null || !alertDialog.isShowing()){
+            resetTap();
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (alertDialog != null && alertDialog.isShowing()) {
+            outState.putInt("Dialog", 1);
+        } else {
+            outState.putInt("Dialog", 0);
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(alertDialog != null && alertDialog.isShowing()){
+            alertDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
 
+    @Override
+    public void onDetach(){
+        super.onDetach();
+        tapDataListener = null;
+        tapViewModel.setTapDataListener(null);
+    }
+
     @OnClick(R.id.tap_count)
-    void onClick(){
+    void onClick() {
         tapViewModel.tap();
-    }
-
-    private void showSaveDialog(){
-        createSaveDialog();
-        saveDialog = builder.create();
-        saveDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        saveDialog.show();
-    }
-
-    private void createSaveDialog(){
-        builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-        builder.setMessage(getResources().getString(R.string.save_message, tapViewModel.getTapCount()));
-        builder.setCancelable(false);
-        builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-                tapViewModel.addTapRecord(getActivity());
-                tapDataListener.onTapDataChanged();
-                resetTap();
-                feedbackHandler.launchFeedbackConditionally();
-
-            }
-        });
-        builder.setNegativeButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-                resetTap();
-//                TapData.setFakeData(getActivity());
-            }
-        });
-    }
-
-    public void resetTap(){
-        tapViewModel.reset();
     }
 
     @Override
     public void onTimeLeftChanged(double timeLeft) {
-        if(timeLeft >= 0){
+        if (timeLeft >= 0) {
             tapInfo.setText(getString(R.string.time_left, timeLeft));
-        }
-        else {
+        } else {
             tapInfo.setText(getString(R.string.tap_info));
         }
     }
@@ -128,18 +127,43 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener{
 
     @Override
     public void onFinished() {
-        showSaveDialog();
+        showDialog(getString(R.string.save_message, tapViewModel.getTapCount()));
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if(saveDialog != null && saveDialog.isShowing()){
-            outState.putInt("Dialog",1);
-        }
-        else{
-            outState.putInt("Dialog",0);
-        }
-
+    public void onFeedbackReady(String message) {
+        showDialog(message);
     }
+
+    @Override
+    public void onSupport(Intent intent) {
+        startActivity(intent);
+    }
+
+    public void resetTap() {
+        tapViewModel.reset();
+    }
+
+    private void showDialog(final String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        builder.setMessage(message);
+        builder.setCancelable(false);
+        builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+                tapViewModel.respondToDialog(message, 1, getActivity());
+            }
+        });
+        builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                tapViewModel.respondToDialog(message, 0, getActivity());
+            }
+        });
+        alertDialog = builder.create();
+        alertDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alertDialog.show();
+    }
+
+
 }

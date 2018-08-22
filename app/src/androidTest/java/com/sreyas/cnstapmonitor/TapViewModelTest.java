@@ -1,5 +1,6 @@
 package com.sreyas.cnstapmonitor;
 
+import android.content.Intent;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.sreyas.cnstapmonitor.Tap.TapViewModel;
@@ -15,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 public class TapViewModelTest {
     private TapViewModel tapViewModel;
     private TapViewModel.TapListener tapListener;
-    private int tapCountTest;
+    private int tapCount;
     private double timeLeftTest;
 
     @Before
@@ -32,11 +33,19 @@ public class TapViewModelTest {
 
                     @Override
                     public void onTapCountChanged(int tapCount) {
-                        tapCountTest = tapCount;
+                        TapViewModelTest.this.tapCount = tapCount;
                     }
 
                     @Override
                     public void onFinished() {
+                    }
+
+                    @Override
+                    public void onFeedbackReady(String string) {
+                    }
+
+                    @Override
+                    public void onSupport(Intent intent) {
                     }
                 };
                 tapViewModel.addTapListener(tapListener);
@@ -45,19 +54,24 @@ public class TapViewModelTest {
     }
 
     @Test
+    public void respondToDialog(){
+        //ToDO
+    }
+
+    @Test
     public void getTapCount(){
         tap(3);
-        assertEquals(2, tapCountTest);
+        assertEquals(2, tapViewModel.getTapCount());
     }
 
     @Test
     public void reset(){
         tap(5);
         tapViewModel.reset();
-        assertEquals(0, tapCountTest);
+        assertEquals(0, tapCount);
         assertEquals(-1, timeLeftTest, .0001);
         tap(3);
-        assertEquals(2, tapCountTest);
+        assertEquals(2, tapCount);
         assertEquals(4.7, timeLeftTest, .1);
     }
 
@@ -65,7 +79,7 @@ public class TapViewModelTest {
     public void finished(){
         tap(5);
         TestUtil.sleep(6000);
-        assertEquals(-1, timeLeftTest, .0001);
+        assertEquals(0, timeLeftTest, .0001);
     }
 
     private void tap(int count){

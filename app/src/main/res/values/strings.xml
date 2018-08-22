@@ -19,4 +19,5 @@
     <string name="rate_link">market://details?id=com.sreyas.cnstapmonitor</string>
     <string name="user_rated_app">rated</string>
     <string name="save_count">saveCount</string>
+    <string name="feedback_action">action</string>
 </resources>
