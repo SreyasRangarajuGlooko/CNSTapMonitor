@@ -1,29 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tap_info"
-        android:text="@string/tap_info"
-        android:textSize="20sp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:freezesText="true"/>
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:freezesText="true"
+        android:text="@string/tap_info"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tap_count"
-        android:text="@string/tap_count"
-        android:background="@color/light_gray"
-        android:gravity="center"
-        android:textSize="100sp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@id/tap_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:freezesText="true"/>
+        android:layout_below="@id/tap_info"
+        android:layout_marginTop="20dp"
+        android:background="@color/light_gray"
+        android:freezesText="true"
+        android:gravity="center"
+        android:text="@string/tap_count"
+        android:textSize="100sp" />
+
+    <ImageButton
+        android:id="@+id/privacy_policy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/tap_count"
+        android:backgroundTint="@color/light_gray"
+        android:src="@android:drawable/ic_dialog_info" />
 
 </RelativeLayout>

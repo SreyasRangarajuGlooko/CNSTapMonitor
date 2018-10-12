@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements TapDataListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-//        Analytics.initialize(this);
+        Analytics.initialize(this);
         tabAdapter = new TabAdapter(getFragmentManager());
         viewPager.setOffscreenPageLimit(2);
         viewPager.setAdapter(tabAdapter);

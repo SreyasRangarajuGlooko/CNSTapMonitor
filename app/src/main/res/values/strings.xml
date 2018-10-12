@@ -20,4 +20,6 @@
     <string name="user_rated_app">rated</string>
     <string name="save_count">saveCount</string>
     <string name="feedback_action">action</string>
+    <string name="bucket">cns-tap</string>
+    <string name="privacy_policy">https://s3.amazonaws.com/%s/Privacy+Policy.htm</string>
 </resources>

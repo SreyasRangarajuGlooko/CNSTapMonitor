@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.sreyas.cnstapmonitor.Models.TapDataListener;
 import com.sreyas.cnstapmonitor.R;
+import com.sreyas.cnstapmonitor.Util;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,6 +70,12 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Util.stopLoading(getActivity());
+    }
+
+    @Override
     public void onPause(){
         super.onPause();
         if(alertDialog == null || !alertDialog.isShowing()){
@@ -107,8 +115,15 @@ public class TapFragment extends Fragment implements TapViewModel.TapListener {
     }
 
     @OnClick(R.id.tap_count)
-    void onClick() {
+    void onClickTapCount() {
         tapViewModel.tap();
+    }
+
+    @OnClick(R.id.privacy_policy)
+    void onClickPrivacyPolicy() {
+        Intent privacyPolicyIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(String.format(getString(R.string.privacy_policy), getString(R.string.bucket))));
+        startActivity(privacyPolicyIntent);
+        Util.startLoading(getActivity());
     }
 
     @Override
